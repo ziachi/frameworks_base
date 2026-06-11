@@ -37,6 +37,7 @@ import com.android.systemui.qs.tiles.ScreenshotTile
 import com.android.systemui.qs.tiles.SmartPixelsTile
 import com.android.systemui.qs.tiles.SoundTile
 import com.android.systemui.qs.tiles.SyncTile
+import com.android.systemui.qs.tiles.SpectrumTile
 import com.android.systemui.qs.tiles.UsbTetherTile
 import com.android.systemui.qs.tiles.VolumeTile
 import com.android.systemui.qs.tiles.VpnTile
@@ -199,4 +200,10 @@ interface LineageModule {
     @IntoMap
     @StringKey(WifiTile.TILE_SPEC)
     fun bindWifiTile(wifiTile: WifiTile): QSTileImpl<*>
+
+    /** Inject SpectrumTile into tileMap in QSModule */
+    @Binds
+    @IntoMap
+    @StringKey(SpectrumTile.TILE_SPEC)
+    fun bindSpectrumTile(spectrumTile: SpectrumTile): QSTileImpl<*>
 }
