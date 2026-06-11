@@ -1,6 +1,6 @@
 # frameworks_base — Matrixx 15 (Santoni)
 
-Fork dari [ProjectMatrixx/frameworks_base](https://github.com/ProjectMatrixx/frameworks_base) branch `15.0` dengan patch khusus untuk **Xiaomi Redmi 4X (santoni)**.
+Fork of [ProjectMatrixx/frameworks_base](https://github.com/ProjectMatrixx/frameworks_base) branch `15.0` with custom patches for **Xiaomi Redmi 4X (santoni)**.
 
 ## Device Info
 | Item | Detail |
@@ -15,26 +15,26 @@ Fork dari [ProjectMatrixx/frameworks_base](https://github.com/ProjectMatrixx/fra
 ## Patch List
 
 ### [v7] #31 — Spectrum QS tile for kernel profile switching
-- Menambahkan Quick Settings tile untuk switch kernel profile (Battery / Balance / Performance / Gaming)
-- Tile membaca/set property `persist.spectrum.profile` dan `spectrum.support`
+- Added Quick Settings tile for kernel profile switching (Battery / Balance / Performance / Gaming)
+- Tile reads/sets property `persist.spectrum.profile` and `spectrum.support`
 - File: `packages/SystemUI/src/com/android/systemui/qs/tiles/SpectrumTile.java`
 
 ### [v7] #32 — SpectrumTile su -c setprop fix
-- AOSP neverallow `property.te:482` memblokir `platform_app` dari set vendor property
-- Fix: ganti `SystemProperties.set()` → `Runtime.exec("su -c setprop ...")` via helper `setSpectrumProfile()`
-- `SystemProperties.get()` tetap dipakai untuk read (tidak kena neverallow)
+- AOSP neverallow `property.te:482` blocks `platform_app` from setting vendor properties
+- Fix: replaced `SystemProperties.set()` → `Runtime.exec("su -c setprop ...")` via helper `setSpectrumProfile()`
+- `SystemProperties.get()` still used for reading (not affected by neverallow)
 - File: `packages/SystemUI/src/com/android/systemui/qs/tiles/SpectrumTile.java`
 
 ### [v7] #33 — Missing API stubs for build compatibility
-- Menambahkan method stub yang dibutuhkan komponen framework lain saat kompilasi:
+- Added missing method stubs required by other framework components during compilation:
   - `TelephonyPermissions.isShell(int uid)`
   - `TelephonyManager.getModemService()`
   - `PackageManager.resolveActivityAsUser(Intent, int, int, int)`
 - File: `core/java/android/content/pm/PackageManager.java`, `telephony/common/com/android/internal/telephony/TelephonyPermissions.java`, `telephony/java/android/telephony/TelephonyManager.java`
 
-## Cara Pakai
+## Usage
 
-Tambahkan di `.repo/local_manifests/santoni.xml`:
+Add to `.repo/local_manifests/santoni.xml`:
 ```xml
 <remove-project name="ProjectMatrixx/frameworks_base" />
 <project path="frameworks/base" name="frameworks_base" remote="ziachi" revision="15.0" />
