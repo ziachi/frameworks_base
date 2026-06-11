@@ -41,7 +41,6 @@ import com.android.systemui.res.R;
 
 import android.content.Intent;
 
-import java.io.IOException;
 import android.util.Log;
 
 import javax.inject.Inject;
@@ -51,7 +50,10 @@ public class SpectrumTile extends QSTileImpl<BooleanState> {
 
     public static final String TILE_SPEC = "spectrum";
 
-    private static final String SPECTRUM_PROP = "persist.spectrum.profile";
+    // System domain property — no root/su required
+    // SELinux: platform_app gets set_prop(system_prop) via vendor sepolicy
+    // init.spectrum.rc triggers on this property to apply kernel profiles
+    private static final String SPECTRUM_PROP = "persist.sys.spectrum.profile";
 
     // Profile names matching init.spectrum.rc
     private static final String[] PROFILE_NAMES = {
@@ -72,13 +74,16 @@ public class SpectrumTile extends QSTileImpl<BooleanState> {
 
     private static final String TAG = "SpectrumTile";
 
-    /** Set property via su to avoid platform_app neverallow on vendor props */
+    /**
+     * Set spectrum profile via SystemProperties.set() directly.
+     * No su/root needed — property is in system_prop domain,
+     * platform_app has set_prop permission via device sepolicy.
+     */
     private void setSpectrumProfile(int profile) {
         try {
-            Runtime.getRuntime().exec(new String[]{
-                "su", "-c", "setprop " + SPECTRUM_PROP + " " + profile
-            });
-        } catch (IOException e) {
+            SystemProperties.set(SPECTRUM_PROP, String.valueOf(profile));
+            Log.i(TAG, "Set spectrum profile to " + profile + " (" + PROFILE_NAMES[profile] + ")");
+        } catch (Exception e) {
             Log.e(TAG, "Failed to set spectrum profile", e);
         }
     }
