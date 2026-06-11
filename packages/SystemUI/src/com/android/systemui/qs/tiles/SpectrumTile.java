@@ -41,6 +41,9 @@ import com.android.systemui.res.R;
 
 import android.content.Intent;
 
+import java.io.IOException;
+import android.util.Log;
+
 import javax.inject.Inject;
 
 /** Quick settings tile: Spectrum kernel profile switcher **/
@@ -66,6 +69,20 @@ public class SpectrumTile extends QSTileImpl<BooleanState> {
     };
 
     private int mCurrentProfile = 0;
+
+    private static final String TAG = "SpectrumTile";
+
+    /** Set property via su to avoid platform_app neverallow on vendor props */
+    private void setSpectrumProfile(int profile) {
+        try {
+            Runtime.getRuntime().exec(new String[]{
+                "su", "-c", "setprop " + SPECTRUM_PROP + " " + profile
+            });
+        } catch (IOException e) {
+            Log.e(TAG, "Failed to set spectrum profile", e);
+        }
+    }
+
 
     @Inject
     public SpectrumTile(
@@ -100,7 +117,7 @@ public class SpectrumTile extends QSTileImpl<BooleanState> {
     @Override
     protected void handleClick(@Nullable Expandable expandable) {
         mCurrentProfile = (mCurrentProfile + 1) % PROFILE_NAMES.length;
-        SystemProperties.set(SPECTRUM_PROP, String.valueOf(mCurrentProfile));
+        setSpectrumProfile(mCurrentProfile);
         refreshState();
     }
 
@@ -108,7 +125,7 @@ public class SpectrumTile extends QSTileImpl<BooleanState> {
     protected void handleLongClick(@Nullable Expandable expandable) {
         // Long press resets to Balance (profile 0)
         mCurrentProfile = 0;
-        SystemProperties.set(SPECTRUM_PROP, "0");
+        setSpectrumProfile(0);
         refreshState();
     }
 
