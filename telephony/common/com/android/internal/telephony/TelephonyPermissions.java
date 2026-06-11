@@ -923,4 +923,11 @@ public final class TelephonyPermissions {
         return UserHandle.isSameApp(uid, Process.ROOT_UID) || UserHandle.isSameApp(uid,
                 Process.SHELL_UID);
     }
+
+    /**
+     * @return true if the specified {@code uid} is for a SHELL process.
+     */
+    public static boolean isShell(int uid) {
+        return UserHandle.isSameApp(uid, Process.SHELL_UID);
+    }
 }

@@ -7822,6 +7822,16 @@ public abstract class PackageManager {
     }
 
     /**
+     * See {@link #resolveActivityAsUser(Intent, int, int)}.
+     * @hide
+     */
+    @Nullable
+    public ResolveInfo resolveActivityAsUser(@NonNull Intent intent,
+            @Nullable String resolvedType, int flags, @UserIdInt int userId) {
+        return resolveActivityAsUser(intent, flags, userId);
+    }
+
+    /**
      * Retrieve all activities that can be performed for the given intent.
      *
      * Use {@link #queryIntentActivities(Intent, ResolveInfoFlags)} when long flags are needed.

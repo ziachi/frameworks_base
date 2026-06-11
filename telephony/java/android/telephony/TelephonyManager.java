@@ -19920,4 +19920,21 @@ public class TelephonyManager {
         }
         return UNKNOWN_CARRIER_ID;
     }
+
+    /**
+     * Get the modem service name.
+     * @return the modem service name or null if not available.
+     * @hide
+     */
+    public String getModemService() {
+        try {
+            ITelephony telephony = getITelephony();
+            if (telephony != null) {
+                return telephony.getModemService();
+            }
+        } catch (RemoteException e) {
+            // ignore
+        }
+        return null;
+    }
 }
