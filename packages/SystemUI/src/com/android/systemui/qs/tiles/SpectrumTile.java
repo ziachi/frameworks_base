@@ -53,7 +53,7 @@ public class SpectrumTile extends QSTileImpl<BooleanState> {
     // System domain property — no root/su required
     // SELinux: platform_app gets set_prop(system_prop) via vendor sepolicy
     // init.spectrum.rc triggers on this property to apply kernel profiles
-    private static final String SPECTRUM_PROP = "persist.sys.spectrum.profile";
+    private static final String SPECTRUM_PROP = "persist.spectrum.profile";
 
     // Profile names matching init.spectrum.rc
     private static final String[] PROFILE_NAMES = {
