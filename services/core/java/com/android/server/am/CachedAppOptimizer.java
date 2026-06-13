@@ -259,7 +259,7 @@ public class CachedAppOptimizer {
 
     // Defaults for phenotype flags.
     @VisibleForTesting static final boolean DEFAULT_USE_COMPACTION = true;
-    @VisibleForTesting static final boolean DEFAULT_USE_FREEZER = true;
+    @VisibleForTesting static final boolean DEFAULT_USE_FREEZER = false;
     @VisibleForTesting static final long DEFAULT_COMPACT_THROTTLE_1 = 5_000;
     @VisibleForTesting static final long DEFAULT_COMPACT_THROTTLE_2 = 10_000;
     @VisibleForTesting static final long DEFAULT_COMPACT_THROTTLE_3 = 500;
@@ -1058,20 +1058,11 @@ public class CachedAppOptimizer {
      */
     @GuardedBy("mPhenotypeFlagLock")
     private void updateUseFreezer() {
-        final String configOverride = Settings.Global.getString(mAm.mContext.getContentResolver(),
-                Settings.Global.CACHED_APPS_FREEZER_ENABLED);
-
-        if ("disabled".equals(configOverride)) {
-            mUseFreezer = false;
-        } else if ("enabled".equals(configOverride)
-                || DeviceConfig.getBoolean(DeviceConfig.NAMESPACE_ACTIVITY_MANAGER_NATIVE_BOOT,
-                    KEY_USE_FREEZER, DEFAULT_USE_FREEZER)) {
-            mUseFreezer = mFreezer.isFreezerSupported();
-            updateFreezerDebounceTimeout();
-            updateFreezerExemptInstPkg();
-        } else {
-            mUseFreezer = false;
-        }
+        // Hard-disable freezer: kernel 4.9 has no cgroup v2 support
+        // GMS Phenotype can override DEFAULT_USE_FREEZER remotely,
+        // so we bypass all conditional logic entirely.
+        mUseFreezer = false;
+        Slog.i(TAG_AM, "CachedAppFreezer hard-disabled for kernel 4.9 compatibility");
 
         final boolean useFreezer = mUseFreezer;
         // enableFreezer() would need the global ActivityManagerService lock, post it.

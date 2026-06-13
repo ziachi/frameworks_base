@@ -76,7 +76,8 @@ class Freezer {
      * @return true if the freezer is supported.
      */
     public boolean isFreezerSupported() {
-        return nativeIsFreezerSupported();
+        // Hard-disable: kernel 4.9 no cgroup v2 freezer
+        return false;
     }
 
     // Native methods
