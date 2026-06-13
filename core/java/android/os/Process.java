@@ -1180,11 +1180,7 @@ public class Process {
      *
      * @hide
      */
-    public static void setProcessFrozen(int pid, int uid, boolean frozen) {
-        // Hard-disable: kernel 4.9 has no cgroup v2 freezer
-        // No-op to block ALL freeze callers at the lowest Java level
-        return;
-    }
+    public static final native void setProcessFrozen(int pid, int uid, boolean frozen);
 
     /**
      * Return the scheduling group of requested process.
