@@ -37,7 +37,8 @@ class Freezer {
      * @param frozen Specify whether to free (true) or unfreeze (false).
      */
     public void setProcessFrozen(int pid, int uid, boolean frozen) {
-        Process.setProcessFrozen(pid, uid, frozen);
+        // Hard-disable: kernel 4.9 no cgroup v2 freezer — skip all freeze/unfreeze
+        return;
     }
 
     /**
@@ -57,7 +58,8 @@ class Freezer {
      * @return 0 if success, or -EAGAIN indicating there's pending transaction.
      */
     public int freezeBinder(int pid, boolean freeze, int timeoutMs) {
-        return nativeFreezeBinder(pid, freeze, timeoutMs);
+        // Hard-disable: kernel 4.9 no cgroup v2 freezer — no binder freeze
+        return 0;
     }
 
     /**
